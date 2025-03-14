@@ -1,15 +1,7 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3.8.4-openjdk-17-slim'  
-//            label 'maven'  // Label opcional, dependiendo de la configuración de tu entorno de Jenkins
-//            args '-v $HOME/.m2:/root/.m2'  // Persistir el caché de Maven entre builds
-        }
-    }
-    // environment {
-    //     MVN_HOME = '/usr/share/maven'
-    // }
-
+    
+    agent { label 'controller' }
+    
     environment {
         IMAGE_NAME = "mi-aplicacion-java"
         IMAGE_TAG = "latest"
@@ -18,41 +10,42 @@ pipeline {
 
     stages {
         stage('Compilar con Maven') {
+            agent {
+                docker { image 'maven:3.8.4-openjdk-17-slim' }
+                }
             steps {
                 sh 'mvn clean package'
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true, onlyIfSuccessful: true
             }
         }
-
+        
         stage('Ejecutar Tests') {
+            agent {
+                docker { image 'maven:3.8.4-openjdk-17-slim' }
+                }
             steps {
                 sh 'mvn test'
             }
         }
-
-        stage('Archivar Artefactos') {
+        stage('Build Image') {
             steps {
-                archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true
-            }
-        }
-
-        stage('Docker Build') {
-            agent { label 'controller' }
-            steps {
-                script {
+                copyArtifacts filter: 'target/*.jar',
+                            fingerprintArtifacts: true,
+                            projectName: '${JOB_NAME}',
+                            flatten: true,
+                            selector: specific('${BUILD_NUMBER}'),
+                            target: 'target';
                     sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f ${DOCKERFILE_PATH} ."
                 }
             }
-        }
-
+        
         stage('Docker Run') {
-            agent { label 'controller' }
             steps {
                 script {
                     sh "docker run -d -p 8090:8080 ${IMAGE_NAME}:${IMAGE_TAG}"
                 }
             }
         }
-
     }
 
     post {
