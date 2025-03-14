@@ -1,51 +1,47 @@
 package com.entrenamiento.certero.repository;
 
 import com.entrenamiento.certero.domain.User;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserRepositoryTest {
+import java.util.List;
+import java.util.Optional;
 
-    private UserRepository userRepository;
+public class UserRepositoryTest {
 
-    @BeforeEach
-    void setUp() {
-        userRepository = new UserRepository();
+    private UserRepository userRepository = new UserRepository();
+
+    @Test
+    public void testSaveUser() {
+        User user = new User(1L, "John Doe", "john.doe@example.com");
+        User savedUser = userRepository.save(user);
+        assertNotNull(savedUser);
+        assertEquals("John Doe", savedUser.getName());
     }
 
     @Test
-    void testFindAll() {
-        List<User> users = userRepository.findAll();
-        assertEquals(3, users.size());
-    }
-
-    @Test
-    void testSave() {
-        User user = new User("Carlos Pérez", 28);
+    public void testFindByName() {
+        User user = new User(1L, "John Doe", "john.doe@example.com");
         userRepository.save(user);
-
-        User foundUser = userRepository.findByName("Carlos Pérez");
-        assertNotNull(foundUser);
-        assertEquals("Carlos Pérez", foundUser.getName());
+        Optional<User> foundUser = userRepository.findByName("John Doe");
+        assertTrue(foundUser.isPresent());
+        assertEquals("John Doe", foundUser.get().getName());
     }
 
     @Test
-    void testDeleteByName() {
-        boolean result = userRepository.deleteByName("John Doe");
-        assertTrue(result);
-
-        User deletedUser = userRepository.findByName("John Doe");
-        assertNull(deletedUser);
+    public void testDeleteByName() {
+        User user = new User(1L, "John Doe", "john.doe@example.com");
+        userRepository.save(user);
+        userRepository.deleteByName("John Doe");
+        Optional<User> foundUser = userRepository.findByName("John Doe");
+        assertFalse(foundUser.isPresent());
     }
 
     @Test
-    void testFindByName() {
-        User user = userRepository.findByName("Jane Smith");
-        assertNotNull(user);
-        assertEquals("Jane Smith", user.getName());
+    public void testFindAllUsers() {
+        userRepository.save(new User(1L, "John Doe", "john.doe@example.com"));
+        userRepository.save(new User(2L, "Jane Smith", "jane.smith@example.com"));
+        List<User> users = userRepository.findAll();
+        assertEquals(2, users.size());
     }
 }
