@@ -9,6 +9,13 @@ pipeline {
     // environment {
     //     MVN_HOME = '/usr/share/maven'
     // }
+
+    environment {
+        IMAGE_NAME = "mi-aplicacion-java"
+        IMAGE_TAG = "latest"
+        DOCKERFILE_PATH = "Dockerfile"
+    }
+
     stages {
         stage('Compilar con Maven') {
             steps {
@@ -27,6 +34,23 @@ pipeline {
                 archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true
             }
         }
+
+        stage('Docker Build') {
+            steps {
+                script {
+                    sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f ${DOCKERFILE_PATH} ."
+                }
+            }
+        }
+
+        stage('Docker Run') {
+            steps {
+                script {
+                    sh "docker run -d -p 8090:8080 ${IMAGE_NAME}:${IMAGE_TAG}"
+                }
+            }
+        }
+
     }
 
     post {
