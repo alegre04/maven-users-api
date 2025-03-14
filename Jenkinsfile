@@ -27,14 +27,6 @@ pipeline {
                 archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true
             }
         }
-
-        stage('Copiar Artefactos a otro Job') {
-            steps {
-                script {
-                    copyArtifacts(projectName: 'NombreDelOtroJob', filter: '**/*.jar', target: 'artifacts/')
-                }
-            }
-        }
     }
 
     post {
