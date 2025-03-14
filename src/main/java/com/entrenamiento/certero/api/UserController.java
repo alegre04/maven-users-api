@@ -2,37 +2,20 @@ package com.entrenamiento.certero.api;
 
 import com.entrenamiento.certero.domain.User;
 import com.entrenamiento.certero.service.UserService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
 public class UserController {
 
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
-    @GetMapping
+    @GetMapping("/users")
     public List<User> getUsers() {
         return userService.getAllUsers();
-    }
-
-    @PostMapping
-    public void addUser(@RequestBody User user) {
-        userService.addUser(user);
-    }
-
-    @DeleteMapping("/{name}")
-    public boolean removeUser(@PathVariable String name) {
-        return userService.removeUser(name);
-    }
-
-    @GetMapping("/{name}")
-    public User getUserByName(@PathVariable String name) {
-        return userService.getUserByName(name);
     }
 }
