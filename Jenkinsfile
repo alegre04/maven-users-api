@@ -36,6 +36,7 @@ pipeline {
         }
 
         stage('Docker Build') {
+            agent { label 'controller' }
             steps {
                 script {
                     sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f ${DOCKERFILE_PATH} ."
@@ -44,6 +45,7 @@ pipeline {
         }
 
         stage('Docker Run') {
+            agent { label 'controller' }
             steps {
                 script {
                     sh "docker run -d -p 8090:8080 ${IMAGE_NAME}:${IMAGE_TAG}"
