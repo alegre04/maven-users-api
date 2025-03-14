@@ -7,11 +7,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.List;
+
+import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
 
@@ -34,13 +35,13 @@ class UserControllerTest {
         // Aquí aseguramos que el controlador devuelve un ResponseEntity
         ResponseEntity<List<User>> response = userController.getUsers();
 
-        // Comprobamos el estado HTTP
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        
-        // Comprobamos que la lista no está vacía
+        // Comprobamos que el estado HTTP sea 200 OK
+        assertEquals(200, response.getStatusCodeValue());
+
+        // Comprobamos que la lista no esté vacía
         assertFalse(response.getBody().isEmpty());
-        
-        // Verificamos el nombre del primer usuario
+
+        // Verificamos que el nombre del primer usuario sea "John Doe"
         assertEquals("John Doe", response.getBody().get(0).getName());
     }
 }
