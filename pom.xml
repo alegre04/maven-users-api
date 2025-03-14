@@ -24,12 +24,14 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring.boot.version}</version> <!-- Versión añadida -->
         </dependency>
 
         <!-- Spring Boot Starter Test (Para pruebas unitarias y de integración) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring.boot.version}</version> <!-- Versión añadida -->
             <scope>test</scope>
         </dependency>
 
@@ -57,10 +59,11 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Spring Boot Maven Plugin (Para la construcción del proyecto) -->
+        <!-- Spring Boot Starter (Agregado para completar la dependencia base de Spring Boot) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+            <version>${spring.boot.version}</version> <!-- Versión añadida -->
         </dependency>
     </dependencies>
 
@@ -70,6 +73,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version> <!-- Versión añadida -->
             </plugin>
 
             <!-- Plugin de maven-compiler para la versión de Java -->
