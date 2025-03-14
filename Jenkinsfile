@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'maven:3.8.4-jdk-17-slim'  
+            image 'maven:3.8.4-openjdk-17-slim'  
 //            label 'maven'  // Label opcional, dependiendo de la configuración de tu entorno de Jenkins
 //            args '-v $HOME/.m2:/root/.m2'  // Persistir el caché de Maven entre builds
         }
