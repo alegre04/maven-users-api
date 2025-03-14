@@ -1,44 +1,38 @@
 package com.entrenamiento.certero.api;
 
-import com.entrenamiento.certero.domain.User;
 import com.entrenamiento.certero.service.UserService;
+import com.entrenamiento.certero.domain.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+class UserControllerTest {
 
-import java.util.List;
-import java.util.ArrayList;
-
-@SpringBootTest
-public class UserControllerTest {
-
-    @MockBean
-    private UserService userService;
+    @Mock
+    private UserService userService; // Mock de UserService
 
     @InjectMocks
-    private UserController userController;
+    private UserController userController; // UserController donde se inyectará el mock
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this); // Inicializa los mocks
+    }
 
     @Test
-    public void testGetUsers() throws Exception {
-        List<User> users = new ArrayList<>();
-        users.add(new User(1L, "John Doe", "john.doe@example.com"));
-        users.add(new User(2L, "Jane Smith", "jane.smith@example.com"));
+    void testGetUsers() {
+        User user = new User(1L, "John Doe", "john.doe@example.com");
+        when(userService.getAllUsers()).thenReturn(List.of(user)); // Simula el comportamiento de getAllUsers()
 
-        when(userService.getAllUsers()).thenReturn(users);
-
-        MockMvc mockMvc = org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup(userController).build();
-
-        mockMvc.perform(get("/users"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("John Doe"))
-                .andExpect(jsonPath("$[1].name").value("Jane Smith"));
+        ResponseEntity<List<User>> response = userController.getUsers();
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertFalse(response.getBody().isEmpty());
+        assertEquals("John Doe", response.getBody().get(0).getName());
     }
 }

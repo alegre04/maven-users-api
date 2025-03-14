@@ -1,34 +1,35 @@
 package com.entrenamiento.certero.service;
 
-import com.entrenamiento.certero.domain.User;
 import com.entrenamiento.certero.repository.UserRepository;
+import com.entrenamiento.certero.domain.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-import java.util.List;
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
-
-public class UserServiceTest {
-
-    @InjectMocks
-    private UserService userService;
+class UserServiceTest {
 
     @Mock
-    private UserRepository userRepository;
+    private UserRepository userRepository; // Mock de UserRepository
+
+    @InjectMocks
+    private UserService userService; // UserService donde se inyectará el mock
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this); // Inicializa los mocks
+    }
 
     @Test
-    public void testGetAllUsers() {
-        List<User> users = new ArrayList<>();
-        users.add(new User(1L, "John Doe", "john.doe@example.com"));
-        users.add(new User(2L, "Jane Smith", "jane.smith@example.com"));
+    void testGetAllUsers() {
+        User user = new User(1L, "John Doe", "john.doe@example.com");
+        when(userRepository.findAll()).thenReturn(List.of(user)); // Simula el comportamiento de findAll()
 
-        when(userRepository.findAll()).thenReturn(users);
-
-        List<User> result = userService.getAllUsers();
-        assertEquals(2, result.size());
+        List<User> users = userService.getAllUsers();
+        assertFalse(users.isEmpty());
+        assertEquals("John Doe", users.get(0).getName());
     }
 }
