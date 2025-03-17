@@ -1,6 +1,6 @@
 pipeline {
     
-    agent { label 'controller' }
+    agent { label 'jenkins_agent_01' }
     
     environment {
         IMAGE_NAME = "mi-aplicacion-java"
