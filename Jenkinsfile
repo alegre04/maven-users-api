@@ -5,14 +5,6 @@ pipeline {
         IMAGE_NAME = "mi-aplicacion-java"
         IMAGE_TAG = "latest"
         DOCKERFILE_PATH = "Dockerfile"
-        SONAR_PROJECT_KEY = "labmaven01"
-        SONAR_PROJECT_NAME = "labmaven01"
-        SONAR_SOURCES = "src/main"
-        SONAR_TESTS = "src/test"
-        SONAR_JUNIT_REPORTS_PATH = "target/surefire-reports"
-        SONAR_JACOCO_REPORT_PATH = "target/jacoco.exec"
-        SONAR_BINARIES = "target/classes"
-        SONAR_SCANNER_HOME = tool name: 'sonar-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
     }
 
     stages {
@@ -31,26 +23,27 @@ pipeline {
                 docker { image 'maven:3.8.4-openjdk-17-slim' }
             }
             steps {
+
                 withSonarQubeEnv('sonar-server') {
-                    sh """
-                        ${SONAR_SCANNER_HOME}/bin/sonar-scanner \
-                            -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-                            -Dsonar.projectName=${SONAR_PROJECT_NAME} \
-                            -Dsonar.sources=${SONAR_SOURCES} \
+                    sh 'mvn clean package org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+                            -Dsonar.projectKey=labmaven01 \
+                            -Dsonar.projectName=labmaven01 \
+                            -Dsonar.sources=src/main \
                             -Dsonar.sourceEncoding=UTF-8 \
-                            -Dsonar.tests=${SONAR_TESTS} \
-                            -Dsonar.junit.reportsPath=${SONAR_JUNIT_REPORTS_PATH} \
-                            -Dsonar.surefire.reportsPath=${SONAR_JUNIT_REPORTS_PATH} \
-                            -Dsonar.jacoco.reportPath=${SONAR_JACOCO_REPORT_PATH} \
-                            -Dsonar.java.binaries=${SONAR_BINARIES} \
+                            -Dsonar.language=java \
+                            -Dsonar.tests=src/test \
+                            -Dsonar.junit.reportsPath=target/surefire-reports \
+                            -Dsonar.surefire.reportsPath=target/surefire-reports \
+                            -Dsonar.jacoco.reportPath=target/jacoco.exec \
+                            -Dsonar.java.binaries=target/classes \
                             -Dsonar.java.coveragePlugin=jacoco \
                             -Dsonar.coverage.jacoco.xmlReportPaths=target/jacoco.xml \
                             -Dsonar.exclusions=**/*IT.java,**/*TEST.java,**/*Test.java,**/src/it**,**/src/test**,**/gradle/wrapper** \
-                            -Dsonar.java.libraries=target/*.jar
-                    """
+                            -Dsonar.java.libraries=target/*.jar'
                 }
             }
         }
+    
 
         stage('Ejecutar Tests') {
             agent {
