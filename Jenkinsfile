@@ -27,7 +27,7 @@ pipeline {
                     scannerHome = tool 'sonar-scanner'
                 }
                 withSonarQubeEnv('sonar-server') {
-                  sh "${scannerHome}/bin/sonar-scanner" \
+                  sh "${scannerHome}/bin/sonar-scanner \
                             -Dsonar.projectKey=labmaven01 \
                             -Dsonar.projectName=labmaven01 \
                             -Dsonar.sources=src/main \
@@ -41,7 +41,7 @@ pipeline {
                             -Dsonar.java.coveragePlugin=jacoco \
                             -Dsonar.coverage.jacoco.xmlReportPaths=target/jacoco.xml \
                             -Dsonar.exclusions=**/*IT.java,**/*TEST.java,**/*Test.java,**/src/it**,**/src/test**,**/gradle/wrapper** \
-                            -Dsonar.java.libraries=target/*.jar
+                            -Dsonar.java.libraries=target/*.jar"
                 }
             }
         }
