@@ -12,7 +12,7 @@ pipeline {
         SONAR_JUNIT_REPORTS_PATH = "target/surefire-reports"
         SONAR_JACOCO_REPORT_PATH = "target/jacoco.exec"
         SONAR_BINARIES = "target/classes"
-        SONAR_SCANNER_HOME = tool name: 'sonar-scanner', type: 'ToolLocator'
+        SONAR_SCANNER_HOME = tool name: 'sonar-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
     }
 
     stages {
