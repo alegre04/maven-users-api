@@ -37,6 +37,7 @@ pipeline {
                 }
             }
         }
+}
     post {
         success {
             echo 'La compilación y las pruebas fueron exitosas.'
@@ -45,5 +46,4 @@ pipeline {
             echo 'Hubo un error en la compilación o las pruebas.'
         }
     }
-}
 }
