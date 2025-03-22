@@ -6,6 +6,7 @@ pipeline {
         DOCKERFILE_PATH = "Dockerfile"
         DOCKER_CREDS = credentials('az-container-creds')
         ACR_REGISTRY = "jenkinsdevregistryec.azurecr.io"
+        APP_NAME = "myapp"
      }
  
 
@@ -68,6 +69,21 @@ pipeline {
                 }
             }
         }
+
+        // stage('Deploy') {
+        //     agent {
+        //         docker { image 'mcr.microsoft.com/azure-cli' }
+        //     }
+        //     steps {
+        //         script {
+        //             sh """az containerapp up \
+        //                     --name ${APP_NAME} \
+        //                     --image ${ACR_REGISTRY}/${IMAGE_NAME}:$BUILD_NUMBER \
+        //                     --ingress external \
+        //                     --target-port 8080"""
+        //         }
+        //     }
+        // }
 
     }
     post {
