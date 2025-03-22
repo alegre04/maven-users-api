@@ -4,6 +4,7 @@ pipeline {
         IMAGE_NAME = "mi-aplicacion-java"
         IMAGE_TAG = "latest"
         DOCKERFILE_PATH = "Dockerfile"
+        DOCKER_CREDS = credentials('az-container-creds')
      }
  
 
@@ -56,7 +57,15 @@ pipeline {
              }
          }
  
-}
+        stage('Publish Image') {
+            steps {
+                script {
+                    sh 'docker login jenkinsdevregistryec.azurecr.io -u ${DOCKER_CREDS_USR} -p ${DOCKER_CREDS_PSW}'
+                }
+            }
+        }
+
+    }
     post {
         success {
             echo 'La compilación y las pruebas fueron exitosas.'
