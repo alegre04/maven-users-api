@@ -5,6 +5,7 @@ pipeline {
         IMAGE_TAG = "latest"
         DOCKERFILE_PATH = "Dockerfile"
         DOCKER_CREDS = credentials('az-container-creds')
+        ACR_REGISTRY = "jenkinsdevregistryec.azurecr.io"
      }
  
 
@@ -53,14 +54,17 @@ pipeline {
                                flatten: true,
                                selector: specific('${BUILD_NUMBER}'),
                                target: 'target'
-                 sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f ${DOCKERFILE_PATH} ."
+                 sh "docker build -t ${ACR_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} -f ${DOCKERFILE_PATH} ."
              }
          }
  
         stage('Publish Image') {
             steps {
                 script {
-                    sh 'docker login jenkinsdevregistryec.azurecr.io -u ${DOCKER_CREDS_USR} -p ${DOCKER_CREDS_PSW}'
+                    sh 'docker login ${ACR_REGISTRY} -u ${DOCKER_CREDS_USR} -p ${DOCKER_CREDS_PSW}'
+                    sh 'docker tag ${ACR_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} ${ACR_REGISTRY}/${IMAGE_NAME}:$BUILD_NUMBER'
+                    sh 'docker push ${ACR_REGISTRY}/${IMAGE_NAME}:$BUILD_NUMBER'
+                    sh 'docker logout'
                 }
             }
         }
