@@ -1,5 +1,11 @@
 pipeline {
     agent { label 'controller' }
+    environment {
+        IMAGE_NAME = "mi-aplicacion-java"
+        IMAGE_TAG = "latest"
+        DOCKERFILE_PATH = "Dockerfile"
+     }
+ 
 
     stages {
         stage('Compilar con Maven') {
@@ -37,6 +43,19 @@ pipeline {
                 }
             }
         }
+
+        stage('Build Image') {
+             steps {
+                 copyArtifacts filter: 'target/*.jar',
+                               fingerprintArtifacts: true,
+                               projectName: '${JOB_NAME}',
+                               flatten: true,
+                               selector: specific('${BUILD_NUMBER}'),
+                               target: 'target'
+                 sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f ${DOCKERFILE_PATH} ."
+             }
+         }
+ 
 }
     post {
         success {
