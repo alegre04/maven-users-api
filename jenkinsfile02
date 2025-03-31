@@ -1,0 +1,39 @@
+pipeline {
+    agent { label 'controller' }
+    environment {
+        IMAGE_NAME = "mi-aplicacion-java"
+        IMAGE_TAG = "latest"
+        DOCKERFILE_PATH = "Dockerfile"
+        DOCKER_CREDS = credentials('az-container-creds')
+        ACR_REGISTRY = "jenkinsdevregistryec.azurecr.io"
+        APP_NAME = "myapp"
+     }
+ 
+
+    stages {
+        stage('Compilar con Maven') {
+            agent {
+                docker { image 'maven:3.8.4-openjdk-17-slim' }
+            }
+            steps {
+                sh 'mvn clean package'
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true, onlyIfSuccessful: true
+            }
+        }
+
+        stage('Sonarqube') {
+            agent {
+                docker { image 'maven:3.8.4-openjdk-17-slim' }
+            }
+            steps {
+                script {
+                    sonarQubeScan(
+                        sonarEnv: 'sonar-server',
+                        projectKey: 'labmaven01',
+                        projectName: 'labmaven01'
+                    )
+                }
+            }
+        } 
+
+}
