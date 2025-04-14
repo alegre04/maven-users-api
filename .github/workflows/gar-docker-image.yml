@@ -38,3 +38,11 @@ jobs:
 
       - name: Push Docker image
         run: docker push $IMAGE_NAME:latest
+        
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy $(basename ${{ github.repository }}) \
+            --image $IMAGE_NAME:latest \
+            --region us-central1 \
+            --platform managed \
+            --allow-unauthenticated
