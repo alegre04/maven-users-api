@@ -5,7 +5,7 @@ pipeline {
         IMAGE_TAG = "latest"
         DOCKERFILE_PATH = "Dockerfile"
         DOCKER_CREDS = credentials('az-container-creds')
-        ACR_REGISTRY = "jenkinsdevregistryec.azurecr.io"
+        ACR_REGISTRY = "jenkinsdevregistrycna.azurecr.io"
         APP_NAME = "myapp"
      }
  
