@@ -4,8 +4,8 @@ pipeline {
         IMAGE_NAME = "mi-aplicacion-java"
         IMAGE_TAG = "latest"
         DOCKERFILE_PATH = "Dockerfile"
-        DOCKER_CREDS = credentials('az-container-creds')
-        ACR_REGISTRY = "jenkinsdevregistrycna.azurecr.io"
+        DOCKER_CREDS = credentials('azcontainerregistrycna')
+        ACR_REGISTRY = "azcontainerregistrycna.azurecr.io"
         APP_NAME = "myapp"
      }
  
