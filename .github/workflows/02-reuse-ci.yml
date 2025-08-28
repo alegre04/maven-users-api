@@ -8,6 +8,9 @@ on:
 
 jobs:
   build:
+    permissions:
+      contents: read
+      actions: read 
 #    uses: owner/repo/.github/workflows/build-maven.yml@main
     uses: ./.github/workflows/build-maven.yml
     with:
