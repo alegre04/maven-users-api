@@ -1,4 +1,4 @@
-name: Build Maven -ga
+name: Build Maven - ga
 
 on:
   push:
