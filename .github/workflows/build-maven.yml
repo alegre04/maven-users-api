@@ -1,4 +1,4 @@
-name: Build Maven (reusable)
+name: Build Maven (reusable) ga
 
 on:
   workflow_call:
